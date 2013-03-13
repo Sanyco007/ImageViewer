@@ -1,0 +1,11 @@
+﻿<Window x:Class="ImageViewer.VkTestWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="VkTestWindow" Height="378" Width="590">
+    <Grid>
+        <Button Content="Авторизация" Height="23" HorizontalAlignment="Left" Margin="21,20,0,0" Name="bAutorization" VerticalAlignment="Top" Width="199" Click="bAutorization_Click" />
+        <Button Content="Загрузка фотографий" Height="23" HorizontalAlignment="Left" Margin="21,63,0,0" Name="bLoadPhotos" VerticalAlignment="Top" Width="143" Click="bLoadPhotos_Click" />
+        <Label Content="Прогресс" Height="28" HorizontalAlignment="Left" Margin="21,101,0,0" Name="lProgress" VerticalAlignment="Top" Width="364" />
+        <ProgressBar Height="25" HorizontalAlignment="Left" Margin="27,127,0,0" Name="progressBar1" VerticalAlignment="Top" Width="398" IsIndeterminate="False" />
+    </Grid>
+</Window>
