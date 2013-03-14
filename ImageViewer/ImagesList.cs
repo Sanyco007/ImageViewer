@@ -1,39 +1,56 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Diagnostics;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Windows.Media.Imaging;
 using System.Windows;
-using System.Windows.Media;
 
 namespace ImageViewer
 {
     class ImagesList
     {
-        List<string> files;
-        private string directory;
-        private int currentImageIndex;
-
+        //Список имен файлов изображений
+        readonly List<string> _files = new List<string>();
+        //Папка из которой запустили изображение
+        private readonly string _directory;
+        //Индекс текущего изображения
+        private int _currentImageIndex;
+        //Список поддерживаемых расширений
+        private readonly List<string> _extension = new List<string> { ".jpg", ".png", ".ico", ".bmp" };
 
         public ImagesList(string fileName)
         {
-            directory = Path.GetDirectoryName(fileName);
-            //получение имен всех файлов изображения в текущей папке
-            files =  Directory.GetFiles(directory, "*.jpg").ToList();
+            //Извлечение директории из файла параметра
+            _directory = Path.GetDirectoryName(fileName);
+            //получение имен всех файлов в текущей папке
+            Debug.Assert(_directory != null, "_directory != null");
+            string[] allFiles = Directory.GetFiles(_directory);
+            //Выбор изображений из всех файлов
+            foreach (string s in allFiles)
+            {
+                //Если хоть один элемент из списка расширений совпадает с именем текущего файла
+                //то добавляем файл в список
+                if (_extension.Exists(item=>s.ToLower().EndsWith(item)))
+                {
+                    _files.Add(s);
+                }
+            }
             //Устанавливаем индекс в соответствии с параметром запущенного изображения
-            currentImageIndex = files.IndexOf(fileName);
+            _currentImageIndex = _files.IndexOf(fileName);
         }
         //Возврат тукущего изображения
         public BitmapImage Current
         {
             get
             {
-                while (!File.Exists(files[currentImageIndex]))
+                //Удаляем те имена из списка, которых уже нет на диске
+                while (!File.Exists(_files[_currentImageIndex]))
                 {
-                    files.RemoveAt(currentImageIndex);
-                    if (currentImageIndex >= files.Count) currentImageIndex = files.Count - 1;
-                    if (currentImageIndex < 0)
+                    _files.RemoveAt(_currentImageIndex);
+                    if (_currentImageIndex >= _files.Count) _currentImageIndex = _files.Count - 1;
+                    //Если все файлы удалены, то закрываем программу
+                    if (_currentImageIndex < 0)
                     {
                         Application.Current.Shutdown();
                         return null;
@@ -41,13 +58,23 @@ namespace ImageViewer
                 }
                 try
                 {
-                    return new BitmapImage(new Uri(files[currentImageIndex]));
+                    return new BitmapImage(new Uri(_files[_currentImageIndex]));
                 }
-                catch (Exception e) 
-                { 
-                    //Тут нужно будет возвращать изображение
-                    //ФАЙЛ НЕВОЗМОЖНО ОТКРЫТЬ
-                    return null; 
+                catch (Exception) 
+                {
+                    //Если полученный файл не есть изображением, то выводим картинку-предуприждение
+                    //Преобрахование из Bitmap в BitmapImage
+                    var result = new BitmapImage();
+                    using (var memory = new MemoryStream())
+                    {
+                        Resource.IncorrectData.Save(memory, ImageFormat.Png);
+                        memory.Position = 0;
+                        result.BeginInit();
+                        result.StreamSource = memory;
+                        result.CacheOption = BitmapCacheOption.OnLoad;
+                        result.EndInit();
+                    }
+                    return result;
                 }
             }
         }
@@ -57,8 +84,8 @@ namespace ImageViewer
             get
             {
                 //Увеличение индекса и проверка на выход из диапазона
-                if (++currentImageIndex >= files.Count) currentImageIndex = 0;
-                return this.Current;
+                if (++_currentImageIndex >= _files.Count) _currentImageIndex = 0;
+                return Current;
             }
         }
         //Возврат предидущего изображения
@@ -67,8 +94,8 @@ namespace ImageViewer
             get
             {
                 //Уменьшение индекса и проверка на выход из диапазона
-                if (--currentImageIndex < 0) currentImageIndex = files.Count-1;
-                return this.Current;
+                if (--_currentImageIndex < 0) _currentImageIndex = _files.Count-1;
+                return Current;
             }
         }
     }

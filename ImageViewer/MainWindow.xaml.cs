@@ -1,81 +1,58 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using System.Windows.Media.Animation;
 
 namespace ImageViewer
 {
-	public partial class MainWindow : Window
+	public partial class MainWindow
 	{
-        ImagesList allImage;
-		public MainWindow()
+	    readonly ImagesList _allImage;
+		
+        public MainWindow()
 		{
             //Закрыть приложение если оно было запущено без аргумента ком. стр. с именем файла
             //1-й параметр - полное имя запущенного приложения
-            if (System.Environment.GetCommandLineArgs().Length <= 1)
+            if (Environment.GetCommandLineArgs().Length <= 1)
             {
                 Application.Current.Shutdown();
                 return;
             }
 
-            this.InitializeComponent();
+            InitializeComponent();
 
-		    var src = System.Environment.GetCommandLineArgs()[1];
+            //Получаем список всех изображений в текущей папке
+            //и показываем запущенную
+            _allImage = new ImagesList(Environment.GetCommandLineArgs()[1]);
+            image.Source = _allImage.Current;
 
-		    if (File.Exists(src))
-		    {
-		        //Получаем список всех изображений в текущей папке
-		        //и показываем запущенную
-		        allImage = new ImagesList(src);
-		        image.Source = allImage.Current;
-		    }
-
-		    //Установка размеров формы в соответствии с рабочим столом
-            this.Width = SystemParameters.MaximizedPrimaryScreenWidth;
-            this.Height = SystemParameters.MaximizedPrimaryScreenHeight;
+            //Установка размеров формы в соответствии с рабочим столом
+            Width = SystemParameters.MaximizedPrimaryScreenWidth;
+            Height = SystemParameters.MaximizedPrimaryScreenHeight;
 		}
 
         private void NextImage()
         {
-            image.Source = allImage.Next;
+            image.Source = _allImage.Next;
         }
 
         private void PrevImage()
         {
-            image.Source = allImage.Prev;
+            image.Source = _allImage.Prev;
         }
 
-        private void btnNextImage_MouseDown(object sender, MouseButtonEventArgs e)
+        private void ImageMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             NextImage();
         }
 
-        private void btnPrevImage_MouseDown(object sender, MouseButtonEventArgs e)
+        private void BtnPrevImageMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             PrevImage();
         }
 
-        private void btnClose_MouseDown(object sender, MouseButtonEventArgs e)
+        private void BtnCloseMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             Close();
-        }
-
-        private void Window_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.T)
-            {
-                new VkTestWindow().ShowDialog();
-            }
         }
 	}
 }
