@@ -29,12 +29,7 @@ namespace ImageViewer
             //Выбор изображений из всех файлов
             foreach (string s in allFiles)
             {
-                //Если хоть один элемент из списка расширений совпадает с именем текущего файла
-                //то добавляем файл в список
-                if (_extension.Exists(item=>s.ToLower().EndsWith(item)))
-                {
-                    _files.Add(s);
-                }
+                if (ExtensionFileIsValidate(s)) _files.Add(s);
             }
             //Устанавливаем индекс в соответствии с параметром запущенного изображения
             _currentImageIndex = _files.IndexOf(fileName);
@@ -44,18 +39,7 @@ namespace ImageViewer
         {
             get
             {
-                //Удаляем те имена из списка, которых уже нет на диске
-                while (!File.Exists(_files[_currentImageIndex]))
-                {
-                    _files.RemoveAt(_currentImageIndex);
-                    if (_currentImageIndex >= _files.Count) _currentImageIndex = _files.Count - 1;
-                    //Если все файлы удалены, то закрываем программу
-                    if (_currentImageIndex < 0)
-                    {
-                        Application.Current.Shutdown();
-                        return null;
-                    }
-                }
+                RemoveNonExistentFiles();
                 try
                 {
                     return new BitmapImage(new Uri(_files[_currentImageIndex]));
@@ -63,18 +47,7 @@ namespace ImageViewer
                 catch (Exception) 
                 {
                     //Если полученный файл не есть изображением, то выводим картинку-предуприждение
-                    //Преобрахование из Bitmap в BitmapImage
-                    var result = new BitmapImage();
-                    using (var memory = new MemoryStream())
-                    {
-                        Resource.IncorrectData.Save(memory, ImageFormat.Png);
-                        memory.Position = 0;
-                        result.BeginInit();
-                        result.StreamSource = memory;
-                        result.CacheOption = BitmapCacheOption.OnLoad;
-                        result.EndInit();
-                    }
-                    return result;
+                    return GetImageWarning();
                 }
             }
         }
@@ -97,6 +70,41 @@ namespace ImageViewer
                 if (--_currentImageIndex < 0) _currentImageIndex = _files.Count-1;
                 return Current;
             }
+        }
+        //Удаляем те имена из списка, которых уже нет на диске
+        private void RemoveNonExistentFiles()
+        {
+            while (!File.Exists(_files[_currentImageIndex]))
+            {
+                _files.RemoveAt(_currentImageIndex);
+                if (_currentImageIndex >= _files.Count) _currentImageIndex = _files.Count - 1;
+                //Если все файлы удалены, то закрываем программу
+                if (_currentImageIndex < 0)
+                {
+                    Application.Current.Shutdown();
+                    return;
+                }
+            }
+        }
+        //Получить изображение "исключение"
+        private BitmapImage GetImageWarning()
+        {
+            var warningImage = new BitmapImage();
+            using (var memory = new MemoryStream())
+            {
+                Resource.IncorrectData.Save(memory, ImageFormat.Png);
+                memory.Position = 0;
+                warningImage.BeginInit();
+                warningImage.StreamSource = memory;
+                warningImage.CacheOption = BitmapCacheOption.OnLoad;
+                warningImage.EndInit();
+            }
+            return warningImage;
+        }
+        //Проверка расширения файла на валидность
+        private bool ExtensionFileIsValidate(string fileName)
+        {
+           return _extension.Exists(item => fileName.ToLower().EndsWith(item));
         }
     }
 }
