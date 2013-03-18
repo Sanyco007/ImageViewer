@@ -5,7 +5,7 @@
 	x:Class="ImageViewer.MainWindow"
 	x:Name="Window"
 	Title="MainWindow"
-	Width="640" Height="480" Background="#65000000" AllowsTransparency="True" WindowStyle="None" WindowState="Normal" ResizeMode="CanResize" WindowStartupLocation="CenterScreen">
+	Width="640" Height="480" Background="#65000000" AllowsTransparency="True" WindowStyle="None" WindowState="Normal" ResizeMode="CanResize" WindowStartupLocation="CenterScreen" KeyDown="WindowKeyDown">
 	<Window.Resources>
 	</Window.Resources>
 	<Grid ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto">
@@ -22,29 +22,25 @@
             <!--Кнопка "НАЗАД" и тригеры для изменения прозрачности при наведении мышки-->
             <Rectangle x:Name="btnPrevImage" Fill="Black" Cursor="Hand" MouseLeftButtonDown="BtnPrevImageMouseLeftButtonDown" Opacity="0.3">
                 <Rectangle.Triggers>
-                    <EventTrigger RoutedEvent="Rectangle.MouseEnter">
-                        <EventTrigger.Actions>
-                            <BeginStoryboard>
-                                <Storyboard>
-                                    <DoubleAnimation Storyboard.TargetProperty="Opacity" Duration="0:0:0.2" From="0.3" To="0.7"/>
-                                    <DoubleAnimation Storyboard.TargetName="prevImage" Storyboard.TargetProperty="Opacity" Duration="0:0:0.2" From="0.3" To="0.7"/>
-                                </Storyboard>
-                            </BeginStoryboard>
-                        </EventTrigger.Actions>
+                    <EventTrigger RoutedEvent="UIElement.MouseEnter">
+                    	<BeginStoryboard>
+                    		<Storyboard>
+                    			<DoubleAnimation Storyboard.TargetProperty="Opacity" Duration="0:0:0.2" From="0.3" To="0.7"/>
+                    			<DoubleAnimation Storyboard.TargetName="prevImage" Storyboard.TargetProperty="Opacity" Duration="0:0:0.2" From="0.3" To="0.7"/>
+                    		</Storyboard>
+                    	</BeginStoryboard>
                     </EventTrigger>
-                    <EventTrigger RoutedEvent="Rectangle.MouseLeave">
-                        <EventTrigger.Actions>
-                            <BeginStoryboard>
-                                <Storyboard>
-                                    <DoubleAnimation Storyboard.TargetProperty="Opacity" Duration="0:0:0.2" From="0.7" To="0.3"/>
-                                    <DoubleAnimation Storyboard.TargetName="prevImage" Storyboard.TargetProperty="Opacity" Duration="0:0:0.2" From="0.7" To="0.3"/>
-                                </Storyboard>
-                            </BeginStoryboard>
-                        </EventTrigger.Actions>
+                    <EventTrigger RoutedEvent="UIElement.MouseLeave">
+                    	<BeginStoryboard>
+                    		<Storyboard>
+                    			<DoubleAnimation Storyboard.TargetProperty="Opacity" Duration="0:0:0.2" From="0.7" To="0.3"/>
+                    			<DoubleAnimation Storyboard.TargetName="prevImage" Storyboard.TargetProperty="Opacity" Duration="0:0:0.2" From="0.7" To="0.3"/>
+                    		</Storyboard>
+                    	</BeginStoryboard>
                     </EventTrigger>
                 </Rectangle.Triggers>
             </Rectangle>
-            <Image Height="40" x:Name="prevImage" Stretch="Fill" VerticalAlignment="Top" Width="39.298" Source="prevImage.png" Margin="0,15,0,0" Opacity="0.3" />
+            <Image Height="40" x:Name="prevImage" Stretch="Fill" VerticalAlignment="Top" Width="39.298" Source="prevImage.png" Margin="0,15,0,0" Opacity="0.3" Cursor="Hand" MouseLeftButtonDown="BtnPrevImageMouseLeftButtonDown" />
             <!--Контрол для вывода изображения-->
             <Image x:Name="image" Margin="0" Width="Auto" Height="Auto" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Cursor="Hand" StretchDirection="DownOnly" MouseLeftButtonDown="ImageMouseLeftButtonDown">
         		<Image.Effect>
@@ -54,29 +50,25 @@
             <!--Кнопка "ЗАКРЫТЬ" и тригеры для изменения прозрачности при наведении мышки-->
             <Rectangle x:Name="btnClose" Fill="Black" Grid.Column="2" Cursor="Hand" MouseLeftButtonDown="BtnCloseMouseLeftButtonDown" Opacity="0.3">
                 <Rectangle.Triggers>
-                    <EventTrigger RoutedEvent="Rectangle.MouseEnter">
-                        <EventTrigger.Actions>
-                            <BeginStoryboard>
-                                <Storyboard>
-                                    <DoubleAnimation Storyboard.TargetProperty="Opacity" Duration="0:0:0.2" From="0.3" To="0.7" />
-                                    <DoubleAnimation Storyboard.TargetName="closeImage" Storyboard.TargetProperty="Opacity" Duration="0:0:0.2" From="0.3" To="0.7"/>
-                                </Storyboard>
-                            </BeginStoryboard>
-                        </EventTrigger.Actions>
+                    <EventTrigger RoutedEvent="UIElement.MouseEnter">
+                    	<BeginStoryboard>
+                    		<Storyboard>
+                    			<DoubleAnimation Storyboard.TargetProperty="Opacity" Duration="0:0:0.2" From="0.3" To="0.7" />
+                    			<DoubleAnimation Storyboard.TargetName="closeImage" Storyboard.TargetProperty="Opacity" Duration="0:0:0.2" From="0.3" To="0.7"/>
+                    		</Storyboard>
+                    	</BeginStoryboard>
                     </EventTrigger>
-                    <EventTrigger RoutedEvent="Rectangle.MouseLeave">
-                        <EventTrigger.Actions>
-                            <BeginStoryboard>
-                                <Storyboard>
-                                    <DoubleAnimation Storyboard.TargetProperty="Opacity" Duration="0:0:0.2" From="0.7" To="0.3" />
-                                    <DoubleAnimation Storyboard.TargetName="closeImage" Storyboard.TargetProperty="Opacity" Duration="0:0:0.2" From="0.7" To="0.3"/>
-                                </Storyboard>
-                            </BeginStoryboard>
-                        </EventTrigger.Actions>
+                    <EventTrigger RoutedEvent="UIElement.MouseLeave">
+                    	<BeginStoryboard>
+                    		<Storyboard>
+                    			<DoubleAnimation Storyboard.TargetProperty="Opacity" Duration="0:0:0.2" From="0.7" To="0.3" />
+                    			<DoubleAnimation Storyboard.TargetName="closeImage" Storyboard.TargetProperty="Opacity" Duration="0:0:0.2" From="0.7" To="0.3"/>
+                    		</Storyboard>
+                    	</BeginStoryboard>
                     </EventTrigger>
                 </Rectangle.Triggers>
             </Rectangle>
-            <Image Height="40" x:Name="closeImage" Stretch="Fill" VerticalAlignment="Top" Width="39.298" Source="closeImage.png" Margin="0,15,-0.001,0" Grid.Column="2" Opacity="0.4" />
+            <Image Height="40" x:Name="closeImage" Stretch="Fill" VerticalAlignment="Top" Width="39.298" Source="closeImage.png" Margin="0,15,-0.001,0" Grid.Column="2" Opacity="0.4" Cursor="Hand" MouseLeftButtonDown="BtnCloseMouseLeftButtonDown" />
         </Grid>
 	</Grid>
 </Window>

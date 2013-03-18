@@ -11,26 +11,27 @@ namespace ImageViewer
         public MainWindow()
 		{
             //Закрыть приложение если оно было запущено без аргумента ком. стр. с именем файла
-            //1-й параметр - полное имя запущенного приложения
-            if (Environment.GetCommandLineArgs().Length <= 1)
+            if (!ParameterPassed())
             {
                 Application.Current.Shutdown();
                 return;
             }
-
             InitializeComponent();
-
             //Получаем список всех изображений в текущей папке
             //и показываем запущенную
             _allImage = new ImagesList(Environment.GetCommandLineArgs()[1]);
             image.Source = _allImage.Current;
-
             //Установка размеров формы в соответствии с рабочим столом
-            Width = SystemParameters.MaximizedPrimaryScreenWidth;
-            Height = SystemParameters.MaximizedPrimaryScreenHeight;
+            SetFormSize();
 		}
 
-        private void NextImage()
+	    private void SetFormSize()
+	    {
+            Width = SystemParameters.MaximizedPrimaryScreenWidth;
+            Height = SystemParameters.MaximizedPrimaryScreenHeight;
+	    }
+
+	    private void NextImage()
         {
             image.Source = _allImage.Next;
         }
@@ -38,6 +39,13 @@ namespace ImageViewer
         private void PrevImage()
         {
             image.Source = _allImage.Prev;
+        }
+
+        private bool ParameterPassed()
+        {
+            //1-й параметр - полное имя запущенного приложения
+            //2-й - имя файла переданого в качестве параметра
+            return (Environment.GetCommandLineArgs().Length >= 2);
         }
 
         private void ImageMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -54,5 +62,17 @@ namespace ImageViewer
         {
             Close();
         }
+
+        private void WindowKeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.Key)
+            {
+                case Key.Right:NextImage();
+                    break;
+                case Key.Left:PrevImage();
+                    break;
+            }
+        }
+
 	}
 }

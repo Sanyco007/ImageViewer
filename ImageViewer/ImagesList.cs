@@ -42,7 +42,7 @@ namespace ImageViewer
                 RemoveNonExistentFiles();
                 try
                 {
-                    return new BitmapImage(new Uri(_files[_currentImageIndex]));
+                    return GetImage();
                 }
                 catch (Exception) 
                 {
@@ -105,6 +105,16 @@ namespace ImageViewer
         private bool ExtensionFileIsValidate(string fileName)
         {
            return _extension.Exists(item => fileName.ToLower().EndsWith(item));
+        }
+        //Получение BitmapImage из имени файла
+        private BitmapImage GetImage()
+        {
+            var resultImage = new BitmapImage();
+            resultImage.BeginInit();
+            resultImage.UriSource = new Uri(_files[_currentImageIndex]);
+            resultImage.CacheOption = BitmapCacheOption.OnLoad;
+            resultImage.EndInit();
+            return resultImage;
         }
     }
 }
