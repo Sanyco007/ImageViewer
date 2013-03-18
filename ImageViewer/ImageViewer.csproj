@@ -122,7 +122,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="closeImage.png" />
     <Resource Include="IncorrectData.png" />
+    <Resource Include="prevImage.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resource.resx">

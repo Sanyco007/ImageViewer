@@ -14,17 +14,69 @@
 		</Grid.RowDefinitions>
         <Grid>
         	<Grid.ColumnDefinitions>
-        		<ColumnDefinition Width="7*"/>
-        		<ColumnDefinition Width="100*"/>
+                <!--Делим всю форму на 3 части, боковые по 7%, а центральная все оставшееся свободное место-->
+                <ColumnDefinition Width="7*"/>
+                <ColumnDefinition Width="100*"/>
         		<ColumnDefinition Width="7*"/>
         	</Grid.ColumnDefinitions>
-        	<Rectangle x:Name="btnPrevImage" Fill="#66000000" Cursor="Hand" MouseLeftButtonDown="BtnPrevImageMouseLeftButtonDown"/>
-        	<Image x:Name="image" Margin="0" Width="Auto" Height="Auto" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Cursor="Hand" StretchDirection="DownOnly" MouseLeftButtonDown="ImageMouseLeftButtonDown">
+            <!--Кнопка "НАЗАД" и тригеры для изменения прозрачности при наведении мышки-->
+            <Rectangle x:Name="btnPrevImage" Fill="Black" Cursor="Hand" MouseLeftButtonDown="BtnPrevImageMouseLeftButtonDown" Opacity="0.3">
+                <Rectangle.Triggers>
+                    <EventTrigger RoutedEvent="Rectangle.MouseEnter">
+                        <EventTrigger.Actions>
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="Opacity" Duration="0:0:0.2" From="0.3" To="0.7"/>
+                                    <DoubleAnimation Storyboard.TargetName="prevImage" Storyboard.TargetProperty="Opacity" Duration="0:0:0.2" From="0.3" To="0.7"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger.Actions>
+                    </EventTrigger>
+                    <EventTrigger RoutedEvent="Rectangle.MouseLeave">
+                        <EventTrigger.Actions>
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="Opacity" Duration="0:0:0.2" From="0.7" To="0.3"/>
+                                    <DoubleAnimation Storyboard.TargetName="prevImage" Storyboard.TargetProperty="Opacity" Duration="0:0:0.2" From="0.7" To="0.3"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger.Actions>
+                    </EventTrigger>
+                </Rectangle.Triggers>
+            </Rectangle>
+            <Image Height="40" x:Name="prevImage" Stretch="Fill" VerticalAlignment="Top" Width="39.298" Source="prevImage.png" Margin="0,15,0,0" Opacity="0.3" />
+            <!--Контрол для вывода изображения-->
+            <Image x:Name="image" Margin="0" Width="Auto" Height="Auto" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Cursor="Hand" StretchDirection="DownOnly" MouseLeftButtonDown="ImageMouseLeftButtonDown">
         		<Image.Effect>
         			<DropShadowEffect BlurRadius="20" ShadowDepth="10"/>
         		</Image.Effect>
         	</Image>
-        	<Rectangle x:Name="btnClose" Fill="#66000000" Grid.Column="2" Cursor="Hand" MouseLeftButtonDown="BtnCloseMouseLeftButtonDown"/>
+            <!--Кнопка "ЗАКРЫТЬ" и тригеры для изменения прозрачности при наведении мышки-->
+            <Rectangle x:Name="btnClose" Fill="Black" Grid.Column="2" Cursor="Hand" MouseLeftButtonDown="BtnCloseMouseLeftButtonDown" Opacity="0.3">
+                <Rectangle.Triggers>
+                    <EventTrigger RoutedEvent="Rectangle.MouseEnter">
+                        <EventTrigger.Actions>
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="Opacity" Duration="0:0:0.2" From="0.3" To="0.7" />
+                                    <DoubleAnimation Storyboard.TargetName="closeImage" Storyboard.TargetProperty="Opacity" Duration="0:0:0.2" From="0.3" To="0.7"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger.Actions>
+                    </EventTrigger>
+                    <EventTrigger RoutedEvent="Rectangle.MouseLeave">
+                        <EventTrigger.Actions>
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="Opacity" Duration="0:0:0.2" From="0.7" To="0.3" />
+                                    <DoubleAnimation Storyboard.TargetName="closeImage" Storyboard.TargetProperty="Opacity" Duration="0:0:0.2" From="0.7" To="0.3"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger.Actions>
+                    </EventTrigger>
+                </Rectangle.Triggers>
+            </Rectangle>
+            <Image Height="40" x:Name="closeImage" Stretch="Fill" VerticalAlignment="Top" Width="39.298" Source="closeImage.png" Margin="0,15,-0.001,0" Grid.Column="2" Opacity="0.4" />
         </Grid>
 	</Grid>
 </Window>
